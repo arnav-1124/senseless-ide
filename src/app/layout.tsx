@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, IBM_Plex_Mono, Inter } from "next/font/google";
+import { ClerkProvider, Show, SignInButton, SignUpButton, UserButton } from '@clerk/nextjs'
+import { dark, neobrutalism } from '@clerk/ui/themes'
 import { ThemeProvider } from "@/components/theme-provider";
 import { cn } from "@/lib/utils";
 import "./globals.css";
@@ -31,12 +33,31 @@ export default function RootLayout({
       <body
         className={`${inter.variable} ${plexMono.variable} antialiased`}
       >
-        <ThemeProvider
-        attribute={"class"}
-        defaultTheme="dark"
-        enableSystem
-        disableTransitionOnChange
-        >{children}</ThemeProvider>
+        <ClerkProvider
+        appearance={{theme: [dark, neobrutalism]}}
+        >
+          <ThemeProvider
+          attribute={"class"}
+          defaultTheme="dark"
+          enableSystem
+          disableTransitionOnChange
+          >
+           <header>
+            <Show when="signed-out">
+              <SignInButton />
+              <SignUpButton>
+                <button className="">
+                  Sign Up
+                </button>
+              </SignUpButton>
+            </Show>
+            <Show when="signed-in">
+              <UserButton />
+            </Show>
+            </header>
+            {children}
+          </ThemeProvider>
+        </ClerkProvider>
       </body>
     </html>
   );
